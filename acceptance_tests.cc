@@ -1,4 +1,4 @@
-#include "gtest/gtest.h"
+#include "acceptance_tests.h"
 
 /*TODO Later: Use function overloading instead of having multiple functions
 GetScore() - gets total score of all the frames
@@ -10,265 +10,280 @@ GetScore(2, 1) - double argument gets score of a ball from a fram (ie. frame 2, 
  JOHN SPRAY'S TEST CASES FOLLOW
 ----------------------------------*/
 TEST(JohnSprayScore, OneBall) {
-  g.Ball(2);
-  ASSERT_EQ(2, g.GetScore());
+    Bowling g;
+    g.Ball(2);
+    ASSERT_EQ(2, g.GetScore());
 }
 
 TEST(JohnSprayScore, TwoBalls) {
-  g.Ball(2);
-  g.Ball(3);
+    Bowling g;
+    g.Ball(2);
+    g.Ball(3);
 
-  EXPECT_EQ(2, g.GetBallScore(0,0));
-  EXPECT_EQ(3, g.GetBallScore(0,1));
-  EXPECT_EQ(5, g.GetFrameScore(0));
-  ASSERT_EQ(5, g.GetScore());
+    EXPECT_EQ(2, g.GetBallScore(0,0));
+    EXPECT_EQ(3, g.GetBallScore(0,1));
+    EXPECT_EQ(5, g.GetFrameScore(0));
+    ASSERT_EQ(5, g.GetScore());
 }
 
 TEST(JohnSprayScore, Spares) {
-  for (int i=0; i<21; i++)
-  {
+    Bowling g;
+    for (int i=0; i<21; i++)
+    {
       g.Ball(5);
-  }
+    }
 
-  //Test number of balls bowled in each frame and the total number of frames bowled.
-  EXPECT_EQ(2, g.GetBallsBowledInFrame(0));
-  EXPECT_EQ(2, g.GetBallsBowledInFrame(1));
-  ASSERT_EQ(3, g.GetBallsBowledInFrame(9));
-  ASSERT_EQ(10, g.GetFramesBowled());
+    //Test number of balls bowled in each frame and the total number of frames bowled.
+    EXPECT_EQ(2, g.GetBallsBowledInFrame(0));
+    EXPECT_EQ(2, g.GetBallsBowledInFrame(1));
+    ASSERT_EQ(3, g.GetBallsBowledInFrame(9));
+    ASSERT_EQ(10, g.GetFramesBowled());
 
-  //Test individual ball scores. First argument is the frame, second argument is the ball.
-  EXPECT_EQ(5, g.GetBallScore(0,0));
-  EXPECT_EQ(5, g.GetBallScore(0,1));
-  EXPECT_EQ(5, g.GetBallScore(1,0));
-  EXPECT_EQ(5, g.GetBallScore(1,1));
-  EXPECT_EQ(5, g.GetBallScore(9,0));
-  EXPECT_EQ(5, g.GetBallScore(9,1));
-  ASSERT_EQ(5, g.GetBallScore(9,2));
+    //Test individual ball scores. First argument is the frame, second argument is the ball.
+    EXPECT_EQ(5, g.GetBallScore(0,0));
+    EXPECT_EQ(5, g.GetBallScore(0,1));
+    EXPECT_EQ(5, g.GetBallScore(1,0));
+    EXPECT_EQ(5, g.GetBallScore(1,1));
+    EXPECT_EQ(5, g.GetBallScore(9,0));
+    EXPECT_EQ(5, g.GetBallScore(9,1));
+    ASSERT_EQ(5, g.GetBallScore(9,2));
 
-  //Test frame scores
-  EXPECT_EQ(15, g.GetFrameScore(0));
-  EXPECT_EQ(30, g.GetFrameScore(1));
-  ASSERT_EQ(150, g.GetFrameScore(9));
+    //Test frame scores
+    EXPECT_EQ(15, g.GetFrameScore(0));
+    EXPECT_EQ(30, g.GetFrameScore(1));
+    ASSERT_EQ(150, g.GetFrameScore(9));
 
-  //Test total score
-  ASSERT_EQ(150, g.GetScore());
+    //Test total score
+    ASSERT_EQ(150, g.GetScore());
 }
 
 TEST(JohnSprayScore, Strikes) {
-  for (int i=0; i<12; i++)
-  {
+    Bowling g;
+    for (int i=0; i<12; i++)
+    {
       g.Ball(10);
-  }
+    }
 
-  //Test number of balls bowled in each frame and the total number of frames bowled.
-  EXPECT_EQ(1, g.GetBallsBowledInFrame(0));
-  EXPECT_EQ(1, g.GetBallsBowledInFrame(1));
-  ASSERT_EQ(3, g.GetBallsBowledInFrame(9));
-  ASSERT_EQ(10, g.GetFramesBowled());
+    //Test number of balls bowled in each frame and the total number of frames bowled.
+    EXPECT_EQ(1, g.GetBallsBowledInFrame(0));
+    EXPECT_EQ(1, g.GetBallsBowledInFrame(1));
+    ASSERT_EQ(3, g.GetBallsBowledInFrame(9));
+    ASSERT_EQ(10, g.GetFramesBowled());
 
-  //Test individual ball scores. First argument is the frame, second argument is the ball.
-  EXPECT_EQ(10, g.GetBallScore(0,0));
-  EXPECT_EQ(10, g.GetBallScore(1,0));
-  EXPECT_EQ(10, g.GetBallScore(9,1));
-  EXPECT_EQ(10, g.GetBallScore(9,0));
-  ASSERT_EQ(10, g.GetBallScore(9,2));
+    //Test individual ball scores. First argument is the frame, second argument is the ball.
+    EXPECT_EQ(10, g.GetBallScore(0,0));
+    EXPECT_EQ(10, g.GetBallScore(1,0));
+    EXPECT_EQ(10, g.GetBallScore(9,1));
+    EXPECT_EQ(10, g.GetBallScore(9,0));
+    ASSERT_EQ(10, g.GetBallScore(9,2));
 
-  //Test frame scores
-  EXPECT_EQ(30, g.GetFrameScore(0));
-  ASSERT_EQ(60, g.GetFrameScore(1));
+    //Test frame scores
+    EXPECT_EQ(30, g.GetFrameScore(0));
+    ASSERT_EQ(60, g.GetFrameScore(1));
 
-  //Test total score
-  ASSERT_EQ(300, g.GetScore());
+    //Test total score
+    ASSERT_EQ(300, g.GetScore());
 }
 
 /*----------------------------------
  ROBERT MARTIN'S TEST CASES FOLLOW
 ----------------------------------*/
 TEST(RobertMartinScore, OneBall) {
-  g.Ball(5);
-  g.Ball(4);
-  ASSERT_EQ(9, g.GetScore());
+    Bowling g;
+    g.Ball(5);
+    g.Ball(4);
+    ASSERT_EQ(9, g.GetScore());
 }
 
 TEST(RobertMartinScore, TwoBalls) {
-  g.Ball(5);
-  g.Ball(4);
-  g.Ball(7);
-  g.Ball(2);
+    Bowling g;
+    g.Ball(5);
+    g.Ball(4);
+    g.Ball(7);
+    g.Ball(2);
 
-  EXPECT_EQ(9, g.GetFrameScore(0));
-  EXPECT_EQ(18, g.GetFrameScore(1));
-  ASSERT_EQ(18, g.GetScore());
+    EXPECT_EQ(9, g.GetFrameScore(0));
+    EXPECT_EQ(18, g.GetFrameScore(1));
+    ASSERT_EQ(18, g.GetScore());
 }
 
 TEST(RobertMartinScore, SimpleSpare) {
-  g.Ball(3);
-  g.Ball(7);
-  g.Ball(3);
+    Bowling g;
+    g.Ball(3);
+    g.Ball(7);
+    g.Ball(3);
 
-  EXPECT_EQ(13, g.GetFrameScore(0));
-  ASSERT_EQ(16, g.GetScore());
+    EXPECT_EQ(13, g.GetFrameScore(0));
+    ASSERT_EQ(16, g.GetScore());
 }
 
 TEST(RobertMartinScore, SimpleFrameAfterSpare) {
-  g.Ball(3);
-  g.Ball(7);
-  g.Ball(3);
-  g.Ball(2);
+    Bowling g;
+    g.Ball(3);
+    g.Ball(7);
+    g.Ball(3);
+    g.Ball(2);
 
-  EXPECT_EQ(13, g.GetFrameScore(0));
-  ASSERT_EQ(18, g.GetScore());
+    EXPECT_EQ(13, g.GetFrameScore(0));
+    ASSERT_EQ(18, g.GetScore());
 }
 
 TEST(RobertMartinScore, SimpleStrike) {
-  g.Ball(10);
-  g.Ball(3);
-  g.Ball(6);
+    Bowling g;
+    g.Ball(10);
+    g.Ball(3);
+    g.Ball(6);
 
-  EXPECT_EQ(19, g.GetFrameScore(0));
-  ASSERT_EQ(28, g.GetScore());
+    EXPECT_EQ(19, g.GetFrameScore(0));
+    ASSERT_EQ(28, g.GetScore());
 }
 
 TEST(RobertMartinScore, PerfectGame) {
-  for (int i=0; i<12; i++)
-  {
+    Bowling g;
+    for (int i=0; i<12; i++)
+    {
       g.Ball(10);
-  }
+    }
 
-  ASSERT_EQ(300, g.GetScore());
+    ASSERT_EQ(300, g.GetScore());
 }
 
 TEST(RobertMartinScore, EndOfArray) {
-  for (int i=0; i<9; i++)
-  {
+    Bowling g;
+    for (int i=0; i<9; i++)
+    {
     g.Ball(0);
     g.Ball(0);
-  }
-  g.Ball(2);
-  g.Ball(8);  //10th frame makes a spare in the first 2 bowls.
-  g.Ball(10); //Last bowl produces a strike.
+    }
+    g.Ball(2);
+    g.Ball(8);  //10th frame makes a spare in the first 2 bowls.
+    g.Ball(10); //Last bowl produces a strike.
 
-  ASSERT_EQ(20, g.GetScore());
+    ASSERT_EQ(20, g.GetScore());
 }
 
 TEST(RobertMartinScore, SampleGame) {
-  g.Ball(1);
-  g.Ball(4);
-  g.Ball(4);
-  g.Ball(5);
-  g.Ball(6);
-  g.Ball(4);
-  g.Ball(5);
-  g.Ball(5);
-  g.Ball(10);
-  g.Ball(0);
-  g.Ball(1);
-  g.Ball(7);
-  g.Ball(3);
-  g.Ball(6);
-  g.Ball(4);
-  g.Ball(10);
-  g.Ball(2);
-  g.Ball(8);
-  g.Ball(6);
+    Bowling g;
+    g.Ball(1);
+    g.Ball(4);
+    g.Ball(4);
+    g.Ball(5);
+    g.Ball(6);
+    g.Ball(4);
+    g.Ball(5);
+    g.Ball(5);
+    g.Ball(10);
+    g.Ball(0);
+    g.Ball(1);
+    g.Ball(7);
+    g.Ball(3);
+    g.Ball(6);
+    g.Ball(4);
+    g.Ball(10);
+    g.Ball(2);
+    g.Ball(8);
+    g.Ball(6);
 
-  //Test number of balls bowled in each frame and the total number of frames bowled.
-  EXPECT_EQ(2, g.GetBallsBowledInFrame(0));
-  EXPECT_EQ(2, g.GetBallsBowledInFrame(1));
-  EXPECT_EQ(2, g.GetBallsBowledInFrame(2));
-  EXPECT_EQ(1, g.GetBallsBowledInFrame(4));
-  EXPECT_EQ(2, g.GetBallsBowledInFrame(5));
-  EXPECT_EQ(1, g.GetBallsBowledInFrame(8));
-  ASSERT_EQ(3, g.GetBallsBowledInFrame(9));
+    //Test number of balls bowled in each frame and the total number of frames bowled.
+    EXPECT_EQ(2, g.GetBallsBowledInFrame(0));
+    EXPECT_EQ(2, g.GetBallsBowledInFrame(1));
+    EXPECT_EQ(2, g.GetBallsBowledInFrame(2));
+    EXPECT_EQ(1, g.GetBallsBowledInFrame(4));
+    EXPECT_EQ(2, g.GetBallsBowledInFrame(5));
+    EXPECT_EQ(1, g.GetBallsBowledInFrame(8));
+    ASSERT_EQ(3, g.GetBallsBowledInFrame(9));
 
-  ASSERT_EQ(10, g.GetFramesBowled());
+    ASSERT_EQ(10, g.GetFramesBowled());
 
-  //Test individual ball scores. First argument is the frame, second argument is the ball.
-  EXPECT_EQ(1, g.GetBallScore(0, 0));
-  EXPECT_EQ(4, g.GetBallScore(0, 1));
-  EXPECT_EQ(6, g.GetBallScore(2, 0));
-  EXPECT_EQ(4, g.GetBallScore(2, 1));
-  EXPECT_EQ(10, g.GetBallScore(4, 0));
-  EXPECT_EQ(2, g.GetBallScore(9, 0));
-  EXPECT_EQ(8, g.GetBallScore(9, 1));
-  ASSERT_EQ(6, g.GetBallScore(9, 2));
+    //Test individual ball scores. First argument is the frame, second argument is the ball.
+    EXPECT_EQ(1, g.GetBallScore(0, 0));
+    EXPECT_EQ(4, g.GetBallScore(0, 1));
+    EXPECT_EQ(6, g.GetBallScore(2, 0));
+    EXPECT_EQ(4, g.GetBallScore(2, 1));
+    EXPECT_EQ(10, g.GetBallScore(4, 0));
+    EXPECT_EQ(2, g.GetBallScore(9, 0));
+    EXPECT_EQ(8, g.GetBallScore(9, 1));
+    ASSERT_EQ(6, g.GetBallScore(9, 2));
 
-  //Test frame scores
-  EXPECT_EQ(5, g.GetFrameScore(0));
-  EXPECT_EQ(29, g.GetFrameScore(2));
-  EXPECT_EQ(60, g.GetFrameScore(4));
-  ASSERT_EQ(117, g.GetFrameScore(8));
+    //Test frame scores
+    EXPECT_EQ(5, g.GetFrameScore(0));
+    EXPECT_EQ(29, g.GetFrameScore(2));
+    EXPECT_EQ(60, g.GetFrameScore(4));
+    ASSERT_EQ(117, g.GetFrameScore(8));
 
-  ASSERT_EQ(133, g.GetScore());
+    ASSERT_EQ(133, g.GetScore());
 }
 
 TEST(RobertMartinScore, HeartBreak) {
-  for (int i=0; i<11; i++)
-  {
+    Bowling g;
+    for (int i=0; i<11; i++)
+    {
       g.Ball(10);
-  }
-  g.Ball(9);
+    }
+    g.Ball(9);
 
-  ASSERT_EQ(299, g.GetScore());
+    ASSERT_EQ(299, g.GetScore());
 }
 
 TEST(RobertMartinScore, TenthFrameSpare) {
-  for (int i=0; i<9; i++)
-  {
-      g.Ball(10);
-  }
-  g.Ball(9);
-  g.Ball(1);
-  g.Ball(1);
+    Bowling g;
+    for (int i=0; i<9; i++)
+    {
+        g.Ball(10);
+    }
+    g.Ball(9);
+    g.Ball(1);
+    g.Ball(1);
 
-  ASSERT_EQ(270, g.GetScore());
+    ASSERT_EQ(270, g.GetScore());
 }
 
 TEST(RobertMartinScore, FullGame01) {
-  TestFullGame(new std::vector<int> {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 0);
+    TestFullGame(std::vector<int> {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 0);
 }
 
 TEST(RobertMartinScore, FullGame02) {
-  TestFullGame(new std::vector<int> {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, 20);
+    TestFullGame(std::vector<int> {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, 20);
 }
 
 TEST(RobertMartinScore, FullGame03) {
-  TestFullGame(new std::vector<int> {10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10}, 300);
+    TestFullGame(std::vector<int> {10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10}, 300);
 }
 
 TEST(RobertMartinScore, FullGame04) {
-  TestFullGame(new std::vector<int> {5,5,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, 16);
+    TestFullGame(std::vector<int> {5,5,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, 16);
 }
 
 TEST(RobertMartinScore, FullGame05) {
-  TestFullGame(new std::vector<int> {10,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, 24);
+    TestFullGame(std::vector<int> {10,3,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}, 24);
 }
 
 TEST(RobertMartinScore, FullGame06) {
-  TestFullGame(new std::vector<int> { 10, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 24);
+    TestFullGame(std::vector<int> { 10, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, 24);
 }
 
 TEST(RobertMartinScore, FullGame07) {
-  //Tenth frame spare
-  TestFullGame(new std::vector<int> {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,1 }, 11);
+    //Tenth frame spare
+    TestFullGame(std::vector<int> {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,5,1 }, 11);
 }
 
 TEST(RobertMartinScore, FullGame08) {
   //Tenth frame strike
-  TestFullGame(new std::vector<int> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 1, 1 }, 12);
+  TestFullGame(std::vector<int> { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 1, 1 }, 12);
 }
 
 TEST(RobertMartinScore, FullGame09) {
-  //Example game from katas
-  TestFullGame(new std::vector<int> { 1, 4, 4, 5, 6, 4, 5, 5, 10, 0, 1, 7, 3, 6, 4, 10, 2, 8, 6 }, 133);
+    //Example game from katas
+    TestFullGame(std::vector<int> { 1, 4, 4, 5, 6, 4, 5, 5, 10, 0, 1, 7, 3, 6, 4, 10, 2, 8, 6 }, 133);
 }
 
 void TestFullGame(std::vector<int> balls, int correct_score) {
-  std::vector<int> v = new std::vector<int>(balls);
+    Bowling g;
+    std::vector<int> v = balls;
 
-  for (auto b:balls) {
+    for (auto b:balls) {
     g.Ball(b);
-  }
-  ASSERT_EQ(g.GetScore(), correct_score);
-  ASSERT_TRUE(g.IsGameOver());
+    }
+    ASSERT_EQ(g.GetScore(), correct_score);
+    ASSERT_TRUE(g.IsGameOver());
 }
