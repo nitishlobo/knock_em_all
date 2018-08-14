@@ -36,9 +36,10 @@ void Bowling::Ball(int n) {
 
 	if (current_b > 1) {
 		//Spare
-		//If previous bowl and the bowl before that are in the same frame and add to 10, then its a spare.
+		//If previous bowl and the bowl before that are in the same frame and add to 10 and it's not in the last frame. 
 		if ((game[frame_r][current_b - 1] == game[frame_r][current_b - 2])
-			&& (game[ball_r][current_b - 1] + game[ball_r][current_b - 2] == 10)) {
+			&& (game[ball_r][current_b - 1] + game[ball_r][current_b - 2] == 10)
+			&& (game[frame_r][current_b - 2] != 9)) {
 			//For a spare, add current ball score to previous frame score.
 			game[score_r][current_b - 1] += n;
 
@@ -47,6 +48,7 @@ void Bowling::Ball(int n) {
 		}
 
 		//Strike
+		//If a 10 is bowled and its not in the last frame.
 		if ((game[ball_r][current_b - 2] == 10) && (game[frame_r][current_b - 2] != 9)) {
 			//Add the next two ball scores.
 			game[score_r][current_b - 2] += game[ball_r][current_b - 1];
@@ -58,10 +60,8 @@ void Bowling::Ball(int n) {
 		}
 	}
 
-	//Go to next ball if it isn't the end of the game
-	if (current_b < 20) {
-		current_b++;
-	}
+	//Go to next ball
+	current_b++;
     //Go to next frame if it is not the last frame and either:
     //          if a strike is achieved
     //          or 2 previous balls are bowled in the same frame
@@ -128,8 +128,24 @@ int Bowling::GetBallsBowledInFrame(int frame) {
 }
 
 bool Bowling::IsGameOver() {
-    //Game is finished only if there are 3 balls in the tenth frame.
-    return false;
+	std::cout << "current_b: " << current_b << "\n";
+	std::cout << "Frame of current_b-3: " << game[frame_r][current_b - 3] << "\n";
+	std::cout << "Frame of current_b-2: " << game[frame_r][current_b - 2] << "\n";
+	std::cout << "Frame of current_b-1: " << game[frame_r][current_b - 1] << "\n";
+	bool over = false;
+
+	//Game is finished only if the last three frames recorded are 9 (ie. 10th frame).
+	//Game is also over if the last two frames are recorded are 9 and 
+	//	there are no spares nor strikes
+	if (current_b > 2) {
+		//Game is finished only if the last three frames recorded are 9 (ie. 10th frame).
+		if ((game[frame_r][current_b - 1] == 9)
+			&& (game[frame_r][current_b - 2] == 9)
+			&& (game[frame_r][current_b - 3] == 9)) {
+			over = true;
+		}
+	}	
+    return over;
 }
 
 //TODO delete debug
