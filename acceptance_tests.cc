@@ -26,7 +26,6 @@ TEST(JohnSprayScore, TwoBalls) {
     ASSERT_EQ(5, g.GetScore());
 }
 
-/*
 TEST(JohnSprayScore, Spares) {
     Bowling g;
     for (int i=0; i<21; i++)
@@ -85,7 +84,7 @@ TEST(JohnSprayScore, Strikes) {
     //Test total score
     ASSERT_EQ(300, g.GetScore());
 }
-*/
+
 /*----------------------------------
  ROBERT MARTIN'S TEST CASES FOLLOW
 ----------------------------------*/

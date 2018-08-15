@@ -62,87 +62,104 @@ void Bowling::Ball(int n) {
 
 	//Go to next ball
 	current_b++;
-    //Go to next frame if it is not the last frame and either:
-    //          if a strike is achieved
-    //          or 2 previous balls are bowled in the same frame
+	//Go to next frame if it is not the last frame and either:
+	//          if a strike is achieved
+	//          or 2 previous balls are bowled in the same frame
 	if ((current_f != 9) && (n == 10)) {
 		current_f++;
 	}
 	if (current_b > 1) {
 		if ((current_f != 9)
-		&& (game[frame_r][current_b - 1] == game[frame_r][current_b - 2])) {
+			&& (game[frame_r][current_b - 1] == game[frame_r][current_b - 2])) {
 			current_f++;
 		}
 	}
 }
 
 int Bowling::GetScore() {
-    printVector(game);
-    return game[score_r][current_b-1];
+	return game[score_r][current_b - 1];
 }
 
 int Bowling::GetFrameScore(int frame) {
 	//TODO: Exception handling - what if frame was a 10,000?
 
-    std::vector<int>::size_type bowl_n=0;
-    while(game[frame_r][bowl_n] != frame) {
+	std::vector<int>::size_type bowl_n = 0;
+	while (game[frame_r][bowl_n] != frame) {
 		//Go to next ball
-        bowl_n++;
-    }
+		bowl_n++;
+
+		//Did not find the frame in the whole game
+		if (bowl_n > 20) {
+			break;
+		}
+	}
 
 	while (game[frame_r][bowl_n] == frame) {
 		bowl_n++;
+
+		//Game over
+		if (bowl_n > 20) {
+			break;
+		}
 	}
-    return game[score_r][bowl_n-1];
+	return game[score_r][bowl_n - 1];
 }
 
 int Bowling::GetBallScore(int frame, int ball)  {
 	//TODO: Exception handling - what if frame was a 10,000?
 
-    std::vector<int>::size_type i=0;
-    while(game[frame_r][i] != frame) {
-        i++;
-    }
-    return game[ball_r][i+ball];
+	std::vector<int>::size_type i = 0;
+	while (game[frame_r][i] != frame) {
+		i++;
+	}
+	return game[ball_r][i + ball];
 }
 
 int Bowling::GetFramesBowled() {
-    return game[frame_r][current_b - 1] + 1;
+	return game[frame_r][current_b - 1] + 1;
 }
 
 int Bowling::GetBallsBowledInFrame(int frame) {
-    //TODO: Exception handling - what if frame was a 10,000?
+	//TODO: Exception handling - what if frame was a 10,000?
 
 	std::vector<int>::size_type bowl_n = 0;
 	while (game[frame_r][bowl_n] != frame) {
 		//Go to next ball
 		bowl_n++;
+
+		//Did not find the frame in the whole game
+		if (bowl_n > 20) {
+			break;
+		}
 	}
 
 	int balls = 0;
 	while (game[frame_r][bowl_n] == frame) {
 		bowl_n++;
 		balls++;
+		
+		//Game over
+		if (bowl_n > 20) {
+			break;
+		}
 	}
-    return balls;
+	return balls;
 }
 
 bool Bowling::IsGameOver() {
-	std::cout << "current_b: " << current_b << "\n";
-	std::cout << "Frame of current_b-3: " << game[frame_r][current_b - 3] << "\n";
-	std::cout << "Frame of current_b-2: " << game[frame_r][current_b - 2] << "\n";
-	std::cout << "Frame of current_b-1: " << game[frame_r][current_b - 1] << "\n";
 	bool over = false;
 
-	//Game is finished only if the last three frames recorded are 9 (ie. 10th frame).
-	//Game is also over if the last two frames are recorded are 9 and 
-	//	there are no spares nor strikes
 	if (current_b > 2) {
-		//Game is finished only if the last three frames recorded are 9 (ie. 10th frame).
-		if ((game[frame_r][current_b - 1] == 9)
-			&& (game[frame_r][current_b - 2] == 9)
-			&& (game[frame_r][current_b - 3] == 9)) {
+		//Game is over if the last three frames recorded are 9 (ie. 10th frame).
+		if ((game[frame_r][current_b - 1] == 9) && (game[frame_r][current_b - 2] == 9) && (game[frame_r][current_b - 3] == 9)) {
 			over = true;
+		} else if ((game[frame_r][current_b - 1] == 9) && (game[frame_r][current_b - 2] == 9)) {
+			//Game is also over if the last two frames are recorded are 9 and 
+			//		there are no spares 
+			//		nor strikes
+			if (((game[frame_r][current_b - 1] != 10) && (game[frame_r][current_b - 2] != 10)) || (game[frame_r][current_b - 1] + game[frame_r][current_b - 2] != 10)) {
+				over = true;
+			}
 		}
 	}	
     return over;
