@@ -120,30 +120,7 @@ int Bowling::GetFramesBowled() {
 }
 
 int Bowling::GetBallsBowledInFrame(int frame) {
-	//TODO: Exception handling - what if frame was a 10,000?
-
-	std::vector<int>::size_type bowl_n = 0;
-	while (game[frame_r][bowl_n] != frame) {
-		//Go to next ball
-		bowl_n++;
-
-		//Did not find the frame in the whole game
-		if (bowl_n > 20) {
-			break;
-		}
-	}
-
-	int balls = 0;
-	while (game[frame_r][bowl_n] == frame) {
-		bowl_n++;
-		balls++;
-		
-		//Game over
-		if (bowl_n > 20) {
-			break;
-		}
-	}
-	return balls;
+	return std::count(game[frame_r].begin(), game[frame_r].end(), frame);
 }
 
 bool Bowling::IsGameOver() {
