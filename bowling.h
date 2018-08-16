@@ -1,4 +1,6 @@
 #include <vector>
+#include <algorithm>	//std::find and std::count
+#include <iterator>		//std::distance
 
 class Bowling {
 private:
@@ -17,6 +19,9 @@ public:
     int GetBallsBowledInFrame(int frame);
     bool IsGameOver();
 };
+
+//Returns the index to the first element in which a match to n is found.
+int getIndexOfMatch(std::vector<int> v, int n);
 
 //TODO delete debug
 void printVector(std::vector<std::vector<int>> v);

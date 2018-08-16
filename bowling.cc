@@ -9,25 +9,25 @@ const int ball_r = 1;
 const int score_r = 2;
 
 Bowling::Bowling() {
-    game_over = false;
-    strike = false;
+	game_over = false;
+	strike = false;
 
-    current_b = 0;
-    current_f = 0;
-    strike_b = 0;
+	current_b = 0;
+	current_f = 0;
+	strike_b = 0;
 
-    //3 rows - these are: frame, pins knocked with each bowl and score respectively.
-    //21 columns - can have a maximum of 21 balls bowled in a game.
-    game.resize(3, std::vector<int>(21, -1));
+	//3 rows - these are: frame, pins knocked with each bowl and score respectively.
+	//21 columns - can have a maximum of 21 balls bowled in a game.
+	game.resize(3, std::vector<int>(21, -1));
 }
 
 void Bowling::Ball(int n) {
-    //3 rows - these are: frame, pins knocked with each bowl and score respectively.
-    game[frame_r][current_b] = current_f;
-    game[ball_r][current_b] = n;
+	//3 rows - these are: frame, pins knocked with each bowl and score respectively.
+	game[frame_r][current_b] = current_f;
+	game[ball_r][current_b] = n;
 
 	if (current_b == 0) {
-        //Score for first ball
+		//Score for first ball
 		game[score_r][current_b] = n;
 	} else {
 		//Cumulative ball score
@@ -43,8 +43,8 @@ void Bowling::Ball(int n) {
 			//For a spare, add current ball score to previous frame score.
 			game[score_r][current_b - 1] += n;
 
-            //Recalculate next ball score
-            game[score_r][current_b] = game[score_r][current_b - 1] + n;
+			//Recalculate next ball score
+			game[score_r][current_b] = game[score_r][current_b - 1] + n;
 		}
 
 		//Strike
@@ -81,38 +81,25 @@ int Bowling::GetScore() {
 }
 
 int Bowling::GetFrameScore(int frame) {
-	//TODO: Exception handling - what if frame was a 10,000?
+	int index = getIndexOfMatch(game[frame_r], frame);
 
-	std::vector<int>::size_type bowl_n = 0;
-	while (game[frame_r][bowl_n] != frame) {
-		//Go to next ball
-		bowl_n++;
-
-		//Did not find the frame in the whole game
-		if (bowl_n > 20) {
-			break;
-		}
+	//Frame not found - invalid frame (ie. not 0 to 9) or not enough balls bowled to enter the frame.
+	if (index == -1) {
+		return -1;
 	}
 
-	while (game[frame_r][bowl_n] == frame) {
-		bowl_n++;
-
-		//Game over
-		if (bowl_n > 20) {
-			break;
-		}
-	}
-	return game[score_r][bowl_n - 1];
+	return game[score_r][index + GetBallsBowledInFrame(frame) - 1];
 }
 
 int Bowling::GetBallScore(int frame, int ball)  {
-	//TODO: Exception handling - what if frame was a 10,000?
+	int index = getIndexOfMatch(game[frame_r], frame);
 
-	std::vector<int>::size_type i = 0;
-	while (game[frame_r][i] != frame) {
-		i++;
+	//Frame not found - invalid frame (ie. not 0 to 9) or not enough balls bowled to enter the frame.
+	if (index == -1) {
+		return -1;
 	}
-	return game[ball_r][i + ball];
+
+	return game[ball_r][index + ball];
 }
 
 int Bowling::GetFramesBowled() {
@@ -138,16 +125,28 @@ bool Bowling::IsGameOver() {
 				over = true;
 			}
 		}
-	}	
-    return over;
+	}
+	return over;
+}
+
+//Returns the index to the first element in which a match to n is found.
+int getIndexOfMatch(std::vector<int> v, int n) {
+	//Get an iterator pointing to the required n in the vector.
+	auto iterator = std::find(v.begin(), v.end(), n);
+
+	//n not found.
+	if (iterator == v.end()) {
+		return -1;
+	}
+	return std::distance(v.begin(), iterator);
 }
 
 //TODO delete debug
 void printVector(std::vector<std::vector<int>> v) {
-    for (std::vector<int>::size_type i=0; i<3; i++) {
-        for (std::vector<int>::size_type j=0; j<21; j++) {
-            std::cout << v[i][j] << " ";
-        }
-        std::cout << "\n";
-    }
+	for (std::vector<int>::size_type i = 0; i < 3; i++) {
+		for (std::vector<int>::size_type j = 0; j < 21; j++) {
+			std::cout << v[i][j] << " ";
+		}
+		std::cout << "\n";
+	}
 }
