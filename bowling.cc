@@ -3,7 +3,7 @@
 //TODO delete debug
 #include <iostream>
 
-//Define constants for rows in game
+//Define constants for rows in game_history
 const int kFrameRow = 0;
 const int kBallRow = 1;
 const int kScoreRow = 2;
@@ -12,47 +12,46 @@ Bowling::Bowling() {
 	current_b_ = 0;
 	current_f_ = 0;
 
-	//3 rows - these are: frame, pins knocked with each bowl and score respectively.
-	//21 columns - can have a maximum of 21 balls bowled in a game.
-	game.resize(3, std::vector<int>(21, -1));
+	//21 columns - can have a maximum of 21 balls bowled in a game_history.
+	game_history.resize(21, { -1, -1, -1 });
 }
 
 void Bowling::Ball(int n) {
 	//3 rows - these are: frame, pins knocked with each bowl and score respectively.
-	game[kFrameRow][current_b_] = current_f_;
-	game[kBallRow][current_b_] = n;
+	game_history[current_b_].frame = current_f_;
+	game_history[current_b_].ball = n;
 
 	if (current_b_ == 0) {
 		//Score for first ball
-		game[kScoreRow][current_b_] = n;
+		game_history[current_b_].score = n;
 	} else {
 		//Cumulative ball score
-		game[kScoreRow][current_b_] = game[kScoreRow][current_b_ - 1] + n;
+		game_history[current_b_].score = game_history[current_b_ - 1].score + n;
 	}
 
 	if (current_b_ > 1) {
 		//Spare
 		//If previous bowl and the bowl before that are in the same frame and add to 10 and it's not in the last frame. 
-		if ((game[kFrameRow][current_b_ - 1] == game[kFrameRow][current_b_ - 2])
-			&& (game[kBallRow][current_b_ - 1] + game[kBallRow][current_b_ - 2] == 10)
-			&& (game[kFrameRow][current_b_ - 2] != 9)) {
+		if ((game_history[current_b_ - 1].frame == game_history[current_b_ - 2].frame)
+			&& (game_history[current_b_ - 1].ball + game_history[current_b_ - 2].ball == 10)
+			&& (game_history[current_b_ - 2].frame != 9)) {
 			//For a spare, add current ball score to previous frame score.
-			game[kScoreRow][current_b_ - 1] += n;
+			game_history[current_b_ - 1].score += n;
 
 			//Recalculate next ball score
-			game[kScoreRow][current_b_] = game[kScoreRow][current_b_ - 1] + n;
+			game_history[current_b_].score = game_history[current_b_ - 1].score + n;
 		}
 
 		//Strike
 		//If a 10 is bowled and its not in the last frame.
-		if ((game[kBallRow][current_b_ - 2] == 10) && (game[kFrameRow][current_b_ - 2] != 9)) {
+		if ((game_history[current_b_ - 2].ball == 10) && (game_history[current_b_ - 2].frame != 9)) {
 			//Add the next two ball scores.
-			game[kScoreRow][current_b_ - 2] += game[kBallRow][current_b_ - 1];
-			game[kScoreRow][current_b_ - 2] += game[kBallRow][current_b_];
+			game_history[current_b_ - 2].score += game_history[current_b_ - 1].ball;
+			game_history[current_b_ - 2].score += game_history[current_b_].ball;
 
 			//Recalculate the next two ball scores.
-			game[kScoreRow][current_b_ - 1] = game[kScoreRow][current_b_ - 2] + game[kBallRow][current_b_ - 1];
-			game[kScoreRow][current_b_] = game[kScoreRow][current_b_ - 1] + n;
+			game_history[current_b_ - 1].score = game_history[current_b_ - 2].score + game_history[current_b_ - 1].ball;
+			game_history[current_b_].score = game_history[current_b_ - 1].score + n;
 		}
 	}
 
@@ -66,58 +65,84 @@ void Bowling::Ball(int n) {
 	}
 	if (current_b_ > 1) {
 		if ((current_f_ != 9)
-			&& (game[kFrameRow][current_b_ - 1] == game[kFrameRow][current_b_ - 2])) {
+			&& (game_history[current_b_ - 1].frame == game_history[current_b_ - 2].frame)) {
 			current_f_++;
 		}
 	}
 }
 
 int Bowling::GetScore() {
-	return game[kScoreRow][current_b_ - 1];
+	return game_history[current_b_ - 1].score;
 }
 
 int Bowling::GetFrameScore(int frame) {
-	int index = GetIndexOfMatch(game[kFrameRow], frame);
+	/*
+	int index = GetIndexOfMatch(game_history[kFrameRow], frame);
 
 	//Frame not found - invalid frame (ie. not 0 to 9) or not enough balls bowled to enter the frame.
 	if (index == -1) {
 		return -1;
 	}
 
-	return game[kScoreRow][index + GetBallsBowledInFrame(frame) - 1];
+	return game_history[kScoreRow][index + GetBallsBowledInFrame(frame) - 1];
+	*/
+	int index = GetIndexOfMatch(game_history, frame);
+
+	//Frame not found - invalid frame (ie. not 0 to 9) or not enough balls bowled to enter the frame.
+	if (index == -1) {
+		return -1;
+	}
+
+	//return game_history[index + GetBallsBowledInFrame(frame) - 1].score;
+	return -199;
 }
 
 int Bowling::GetBallScore(int frame, int ball)  {
-	int index = GetIndexOfMatch(game[kFrameRow], frame);
+	/*
+	int index = GetIndexOfMatch(game_history[kFrameRow], frame);
 
 	//Frame not found - invalid frame (ie. not 0 to 9) or not enough balls bowled to enter the frame.
 	if (index == -1) {
 		return -1;
 	}
 
-	return game[kBallRow][index + ball];
+	return game_history[index + ball].ball;
+	*/
+	return -477;
 }
 
 int Bowling::GetFramesBowled() {
-	return game[kFrameRow][current_b_ - 1] + 1;
+	return game_history[current_b_ - 1].frame + 1;
 }
 
 int Bowling::GetBallsBowledInFrame(int frame) {
-	return std::count(game[kFrameRow].begin(), game[kFrameRow].end(), frame);
+	/*
+	return std::count(game_history[kFrameRow].begin(), game_history[kFrameRow].end(), frame);
+	*/
+	/*int balls = 0;
+	for (BallRolled &i : game_history) {
+		if (i.frame == frame) {
+			balls++;
+		}
+	}
+	return balls;
+	*/
+	//return std::count_if(game_history.begin(), game_history.end(), [](const BallRolled &i, int frame) {return i.frame == frame;});
+	std::find_if(game_history.begin(), game_history.end(), boost::bind(&BallRolled::frame, _1) == frame);
 }
 
 bool Bowling::IsGameOver() {
 	bool over = false;
 
 	if (current_b_ > 2) {
-		//Game is over if the last three frames recorded are 9 (ie. 10th frame).
-		if ((game[kFrameRow][current_b_ - 1] == 9) && (game[kFrameRow][current_b_ - 2] == 9) && (game[kFrameRow][current_b_ - 3] == 9)) {
+		//game_history is over if the last three frames recorded are 9 (ie. 10th frame).
+		if ((game_history[current_b_ - 1].frame == 9) && (game_history[current_b_ - 2].frame == 9) && (game_history[current_b_ - 3].frame == 9)) {
 			over = true;
-		} else if ((game[kFrameRow][current_b_ - 1] == 9) && (game[kFrameRow][current_b_ - 2] == 9)) {
-			//Game is also over if the last two frames are recorded are 9 and 
+		} else if ((game_history[current_b_ - 1].frame == 9) && (game_history[current_b_ - 2].frame == 9)) {
+			//game_history is also over if the last two frames are recorded are 9 and 
 			//		there are no spares 
 			//		nor strikes
-			if (((game[kFrameRow][current_b_ - 1] != 10) && (game[kFrameRow][current_b_ - 2] != 10)) || (game[kFrameRow][current_b_ - 1] + game[kFrameRow][current_b_ - 2] != 10)) {
+			if (((game_history[current_b_ - 1].frame != 10) && (game_history[current_b_ - 2].frame != 10)) || (game_history[current_b_ - 1].frame + game_history[current_b_ - 2].frame != 10)) {
 				over = true;
 			}
 		}
@@ -125,6 +150,18 @@ bool Bowling::IsGameOver() {
 	return over;
 }
 
+bool areNumbersEqual(int i, int n) {
+	if (i == n) {
+		return true;
+	}
+	return false;
+}
+
+int GetIndexOfMatch(std::vector<BallRolled> & history, int n) {
+	return 0;
+}
+
+/*
 //Returns the index to the first element in which a match to n is found in v.
 int GetIndexOfMatch(std::vector<int> v, int n) {
 	//Get an iterator pointing to the required n in the vector.
@@ -136,6 +173,7 @@ int GetIndexOfMatch(std::vector<int> v, int n) {
 	}
 	return std::distance(v.begin(), iterator);
 }
+*/
 
 //TODO delete debug
 void PrintVector(std::vector<std::vector<int>> v) {
