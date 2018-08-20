@@ -1,7 +1,7 @@
 #include <vector>
 #include <algorithm>	//std::find and std::count
 #include <iterator>		//std::distance
-#include <boost/bind.hpp>
+//#include <boost/bind.hpp>
 
 struct BallRolled {
 	int frame;
@@ -27,7 +27,7 @@ public:
 
 //Returns the index to the first element in which a match to n is found.
 //int GetIndexOfMatch(std::vector<int> v, int n);
-int GetIndexOfMatch(std::vector<BallRolled> & history, int n);
+//int GetIndexOfMatch(std::vector<BallRolled> & history, int n);
 
 //TODO delete debug
 void PrintVector(std::vector<std::vector<int>> v);

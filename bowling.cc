@@ -31,7 +31,7 @@ void Bowling::Ball(int n) {
 
 	if (current_b_ > 1) {
 		//Spare
-		//If previous bowl and the bowl before that are in the same frame and add to 10 and it's not in the last frame. 
+		//If previous bowl and the bowl before that are in the same frame and add to 10 and it's not in the last frame.
 		if ((game_history[current_b_ - 1].frame == game_history[current_b_ - 2].frame)
 			&& (game_history[current_b_ - 1].ball + game_history[current_b_ - 2].ball == 10)
 			&& (game_history[current_b_ - 2].frame != 9)) {
@@ -85,16 +85,27 @@ int Bowling::GetFrameScore(int frame) {
 	}
 
 	return game_history[kScoreRow][index + GetBallsBowledInFrame(frame) - 1];
-	*/
-	int index = GetIndexOfMatch(game_history, frame);
+
+	//int index = GetIndexOfMatch(game_history, frame);
 
 	//Frame not found - invalid frame (ie. not 0 to 9) or not enough balls bowled to enter the frame.
 	if (index == -1) {
 		return -1;
 	}
-
+    */
 	//return game_history[index + GetBallsBowledInFrame(frame) - 1].score;
-	return -199;
+    //Get an iterator pointing to the required n in the vector.
+    auto iterator = std::find_if(game_history.begin(),
+                                game_history.end(),
+                                [&frame_to_match = frame]
+                                (const BallRolled &b) -> bool { return b.frame == frame_to_match; });
+
+    while (iterator->frame == frame) {
+        std::advance(iterator, 1);
+    }
+    std::advance(iterator, -1);
+
+    return iterator->score;
 }
 
 int Bowling::GetBallScore(int frame, int ball)  {
@@ -108,7 +119,16 @@ int Bowling::GetBallScore(int frame, int ball)  {
 
 	return game_history[index + ball].ball;
 	*/
-	return -477;
+    //Get an iterator pointing to the required n in the vector.
+	auto iterator = std::find_if(game_history.begin(),
+                                game_history.end(),
+                                [&frame_to_match = frame]
+                                (const BallRolled &b) -> bool { return b.frame == frame_to_match; });
+
+    //Increment the iterator by the number of balls.
+    std::advance(iterator, ball);
+
+    return iterator->ball;
 }
 
 int Bowling::GetFramesBowled() {
@@ -127,8 +147,10 @@ int Bowling::GetBallsBowledInFrame(int frame) {
 	}
 	return balls;
 	*/
-	//return std::count_if(game_history.begin(), game_history.end(), [](const BallRolled &i, int frame) {return i.frame == frame;});
-	std::find_if(game_history.begin(), game_history.end(), boost::bind(&BallRolled::frame, _1) == frame);
+	return std::count_if(game_history.begin(),
+        game_history.end(),
+        [&frame_to_match = frame]
+        (const BallRolled &b) -> bool { return b.frame == frame_to_match; });
 }
 
 bool Bowling::IsGameOver() {
@@ -139,8 +161,8 @@ bool Bowling::IsGameOver() {
 		if ((game_history[current_b_ - 1].frame == 9) && (game_history[current_b_ - 2].frame == 9) && (game_history[current_b_ - 3].frame == 9)) {
 			over = true;
 		} else if ((game_history[current_b_ - 1].frame == 9) && (game_history[current_b_ - 2].frame == 9)) {
-			//game_history is also over if the last two frames are recorded are 9 and 
-			//		there are no spares 
+			//game_history is also over if the last two frames are recorded are 9 and
+			//		there are no spares
 			//		nor strikes
 			if (((game_history[current_b_ - 1].frame != 10) && (game_history[current_b_ - 2].frame != 10)) || (game_history[current_b_ - 1].frame + game_history[current_b_ - 2].frame != 10)) {
 				over = true;
@@ -157,9 +179,22 @@ bool areNumbersEqual(int i, int n) {
 	return false;
 }
 
-int GetIndexOfMatch(std::vector<BallRolled> & history, int n) {
+/*
+int GetIndexOfMatch(std::vector<BallRolled> history, int n) {
+    //Get an iterator pointing to the required n in the vector.
+	auto iterator = std::find_if(history.begin(),
+                                history.end(),
+                                [&n = n]
+                                (const BallRolled &b) -> bool { return ;
+
+	//n not found.
+	if (iterator == v.end()) {
+		return -1;
+	}
+	return std::distance(v.begin(), iterator);
 	return 0;
 }
+*/
 
 /*
 //Returns the index to the first element in which a match to n is found in v.
